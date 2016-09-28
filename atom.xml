@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>alexsinfarosa.com</title>
+  
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://.alexsinfarosa.com/"/>
+  <updated>2016-09-27T21:45:45.000Z</updated>
+  <id>http://.alexsinfarosa.com/</id>
+  
+  <author>
+    <name>Alex Sinfarosa</name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Logistic Regression Modeling of Real Estate Properties</title>
+    <link href="http://.alexsinfarosa.com/2016/06/16/Logistic-Regression-Modeling-of-Real-Estate-Properties/"/>
+    <id>http://.alexsinfarosa.com/2016/06/16/Logistic-Regression-Modeling-of-Real-Estate-Properties/</id>
+    <published>2016-06-16T15:08:35.000Z</published>
+    <updated>2016-09-27T21:45:45.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>I was recently tasked with discovering some additional information from a set of housing data in the upstate New York region that could help elucidate why some properties sell over others. Given two <code>csv</code> files with data from active and sold properties, I immediately thought how cool it would be to build a predictive model using logistic regression! I built the whole thing in R, too, which gave me more experience with the software, and surprised me in its simplicity and power. I was limited by my dataset, as it was not as large as I would have hoped for, but nevertheless, I got right down to work.</p>
+<a id="more"></a>
+<h2 id="Data-Data-Data…"><a href="#Data-Data-Data…" class="headerlink" title="Data Data Data…"></a>Data Data Data…</h2><p>Given the data for a particular region (where there is no need to filter the properties as the location variable is the same) I had a <code>csv</code> of the properties that have sold and another one detailing the properties that remain active. The relevant characteristics of the properties were – market price, address, days on market, square footage, acres of lot, year built, bedrooms, baths, and yearly property taxes.</p>
+<h2 id="Dimensionality-Reduction"><a href="#Dimensionality-Reduction" class="headerlink" title="Dimensionality Reduction"></a>Dimensionality Reduction</h2><p>To build my model, it was vital to understand which variables (the characteristics of the properties listed above) contributed towards the likelihood of the property being sold (for example, is a property with higher taxes than another home close by, controlling for similarity in price and size less likely to sell?). Therefore, I did a prior examination of these relationships (essentially a dimensionality reduction, where the variables that were uncorrelated are determined as not being essential and thus omitted from the eventual model). R allows you to quickly do a scatter plot matrix of all pair-wise combinations of the variables. Having a horizontal or vertical slope was clear indication of this.</p>
+<p><img src="graph1.png" alt="first graph"></p>
+<p><em>Relation of variables of active properties: Horizontal and vertical slopes can be ruled out as having no effect on outcome, in preparation for our model.</em></p>
+<p>Active Properties - The variables (in this case, market price, above ground square footage, acres, year built, bedrooms, bathrooms, and, total property taxes) can be found in a diagonal line from top left to bottom right. Each variable is then plotted against each other. For example, the first square in the second column next to the list price square, is an individual scatterplot of market price and above ground square footage, with price as the X-axis and above square footage as the Y-axis.</p>
+<p>In essence, the boxes on the upper right hand side of the whole scatterplot are mirror images of the plots on the lower left hand. In this scatterplot, we can see that there are correlations between price and taxes; year built and taxes; square footage and taxes; because the plot shows a slight slope of the lines. With a slope of zero, we have a horizontal line which indicates that there is no relationship between the variables. We see this with price and acres; square footage and acres; acres and year built; acres and taxes; bedroom count and price; square footage and bathroom count; and in in several other places as well. We also see some vertical lines, which are problematic as they indicate that there is no change in x. Thus our formula is undefined due to division by zero. Some will term this condition infinite slope, but be aware that we can’t tell if it is positive or negative infinity.</p>
+<p>Lastly, there are ambiguous or weak correlations between variables. In this case, it would be important to continue with further with additional statistical analyses and preferably a larger dataset to confirm or deny any relationships. In essence, we can remove acres, bedrooms and bath count from our logistic regression model. However I must make note that these results could also be as a result of discrete variables being visualized in a scatterplot, so as usual, further analysis is needed.</p>
+<p>Sold - Similarly as with active properties, examining the prior relationships between variables is vital, so we can rule out any potential extraneous variables in our model. Looking at the figure underneath, it is apparent that there is far more activity occurring with this dataset (which is expected as the dataset was larger). There also are interesting apparent correlations between price and square footage and taxes and square footage, relationships that were overlooked or not detectable with the active properties dataset. As previously, we see that discrete variables yield vertical slopes and horizontal slopes which are indicative of the absence of a relationship at the moment, but I should mention that there could be the possibility of lurking variables.</p>
+<p><img src="graph2.png" alt="second graph"></p>
+<p><em>Relationships between the variables of sold properties: We can rule out those variables that appear to have no effect, so we can know what variables will be more significant for the logistic model.</em></p>
+<h2 id="The-model"><a href="#The-model" class="headerlink" title="The model"></a>The model</h2><p>I tested the model for multiple predictors along with their interactions.</p>
+<p>Above Ground Square Footage + Price + Total Taxes: Testing these multiple predictors to see whether we can reject the null hypothesis (that there is no relationship between the variables) yielded a p-value of 0.00721, which indicates that this is statistically significant and unlikely to have happened purely by chance. For a few prices of the 100,000 range, a single unit change in property taxes increased the log odds of a property being sold by 3.180E-01. For homes where the log odds are sharp, it could be possible that the market price of the home does not coincide with its value. Higher priced properties had a higher log odds of being sold when there was a one unit change in square footage, which is logical.</p>
+<p>Another relationship is between taxes and square footage, increasing the log odds of a property being sold as they both change in one unit. The decreases in the log odds of properties being sold were seen with properties in the lower price range with a single unit change in taxes and square footage, -2.945E-04. This suggests that there is a boundary/threshold for square footage/property taxes that should not be crossed if a property is to be sold.</p>
+<p>Price + Year Built: For this combination, we see that the null deviance (which is the deviance when x = 0) is 181.944 whereas the residual deviance is 58.669 on 48 degrees of freedom (number of observations - number of predictor values). For every one unit change in the year the property was built, the log odds of the property being sold decreases by -9.907E -04, which signifies that as price and age increase, the odds of a property being sold decrease.</p>
+<p>Price + Total Taxes: For every one unit of change of yearly total taxes, the log odds of a property being sold increases by 6.092E-04, but it ultimately depends on the price, as there are wide variations even for similar prices, indicating that there could be some property taxes that surpass the value inferred by market price.</p>
+<p>Price + Days on Market: With one unit change in days on market (1 day); the log odds of a property being sold decreases by -4.078E-03. With a lower residual deviance than null, we can say that there is an effect of the days on the market on the property being sold, with those being on the market longer having the odds decrease. Across the board, when this occurred, it appears potential buyers are less likely to want to purchase because with a single unit change in price, there is predominantly a decrease in the odds of selling.</p>
+<h2 id="Predicting"><a href="#Predicting" class="headerlink" title="Predicting"></a>Predicting</h2><p>The usefulness of logistic regression modeling is that it can serve as a predictor to gauge the odds that a property will sell given the predictor variables mentioned above. Given the limited nature of the data, I nevertheless decided to run the predictor function created in R: predict(mylogit, type=”response”, newdata=newdata2) to determine whether it would correctly predict the selling of a property that was recently sold, but listed under the data as active.</p>
+<p>The result was 1, which predicts that the property does have a significant odd of being sold given the interacting predictor variables. More data would be useful in determining the accuracy of the test data used in the model.</p>
+<h2 id="Further-work"><a href="#Further-work" class="headerlink" title="Further work"></a>Further work</h2><p>Further work would require a larger dataset that would allow for more specific filtering the data, allowing for more precise and models with higher accuracy. The ideal method for this filtering would be the algorithm k-nearest neighbor classifier, a popular machine learning technique used for classification. Implemented beforehand with the current dataset, it yielded specific subgroups that shared similar characteristics (for example, data was classified by price and acre of property).</p>
+<p>However, given the limited amount of data, certain groups were vastly small in size (approx. 1-2) and odd in dimensions (2 data points for unsold versus 4 data points for sold) which was indicative that the use of this algorithm would be inefficient and likely to yield incorrect results. Given the limited dataset, the method used for dimensionality reduction was not as sophisticated as it could have been, which is something that would be greatly improved with larger datasets. In addition, for greater efficiency of these machine learning algorithms, it is important to have a large training dataset for properties unsold and sold so predictions can be higher in accuracy when working with data of active properties, where one may wish to determine why a property has remained on the market for x period of time.</p>
+<p>This brings me to my last suggestion for another avenue for possible further work – having a spread-sheet of data of properties that were recently removed from being active; and to examine the model’s accuracy with it’s predictions. I am currently working on visualizing this data via the JavaScript library <a href="https://d3js.org/" target="_blank" rel="external">d3.js.</a>.</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;I was recently tasked with discovering some additional information from a set of housing data in the upstate New York region that could help elucidate why some properties sell over others. Given two &lt;code&gt;csv&lt;/code&gt; files with data from active and sold properties, I immediately thought how cool it would be to build a predictive model using logistic regression! I built the whole thing in R, too, which gave me more experience with the software, and surprised me in its simplicity and power. I was limited by my dataset, as it was not as large as I would have hoped for, but nevertheless, I got right down to work.&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="Machine Learning" scheme="http://.alexsinfarosa.com/tags/Machine-Learning/"/>
+    
+      <category term="Logistic Regression" scheme="http://.alexsinfarosa.com/tags/Logistic-Regression/"/>
+    
+      <category term="Dimensionality Reduction" scheme="http://.alexsinfarosa.com/tags/Dimensionality-Reduction/"/>
+    
+      <category term="Python" scheme="http://.alexsinfarosa.com/tags/Python/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Simple Spelling Corrector</title>
+    <link href="http://.alexsinfarosa.com/2016/04/23/Simple-Spelling-Corrector/"/>
+    <id>http://.alexsinfarosa.com/2016/04/23/Simple-Spelling-Corrector/</id>
+    <published>2016-04-23T09:45:29.000Z</published>
+    <updated>2016-09-27T21:48:03.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>In “How to Write a Spelling Corrector” <a href="http://norvig.com/spell-correct.html" target="_blank" rel="external">http://norvig.com/spell-correct.html</a>, Norvig describes training his algorithm on about a million words taken from several public domain books. Various precompiled word frequency lists are also available on the web, for example for all of the Project Gutenberg texts up to Apr 2006 at <a href="http://en.wiktionary.org/wiki/Wiktionary:Frequency_lists#Project_Gutenberg" target="_blank" rel="external">http://en.wiktionary.org/wiki/Wiktionary:Frequency_lists#Project_Gutenberg</a> .</p>
+<a id="more"></a>
+<p>From that list, the frequencies per billion for the following selection of twenty four words are roughly</p>
+<table><br><tr><td>fog 13,651 </td><td>for 7,097,981 </td><td>ford 15,620 </td><td>fore 6,699 </td><td>forge 3,893 </td><td>fork  8,219</td></tr><br><tr><br><td>form 307,506<br></td><td>fort 23,113<br></td><td>frog 4,119<br></td><td>go 816,536<br></td><td>god 552,668<br></td><td>good 966,602<br></td></tr><tr><br><td>gorge  6,177<br></td><td>got 432,016<br></td><td>groan 9,995<br></td><td>grow 64,005<br></td><td>grown 57,772<br></td><td>lord 422,407<br></td></tr><tr><br><td>more 1,899,787<br></td><td>nor 349,691<br></td><td>of 33,950,064<br></td><td>off 545,832<br></td><td>or 4,228,287<br></td><td>work 829,823<br></td></tr><br></table>
+
+
+<p>Now, we would like to write a function <code>correct()</code> that returns the suggested corrected spelling for each of the four words: <strong>‘frog’</strong>, <strong>‘gorf’</strong>, <strong>‘forg’</strong>, and <strong>‘grof’</strong>.</p>
+<h2 id="Bring-in-the-table…"><a href="#Bring-in-the-table…" class="headerlink" title="Bring in the table…"></a>Bring in the table…</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">table = &#123;<span class="string">"fog"</span>:<span class="number">13651</span>,<span class="string">"for"</span>:<span class="number">7097981</span>,<span class="string">"ford"</span>:<span class="number">15620</span>,<span class="string">"fore"</span>:<span class="number">6699</span>,<span class="string">"forge"</span>:<span class="number">3893</span>,<span class="string">"fork"</span>:<span class="number">8219</span>,<span class="string">"form"</span>:<span class="number">307506</span>,<span class="string">"fort"</span>:<span class="number">23113</span>,</div><div class="line">        <span class="string">"frog"</span>:<span class="number">4119</span>,<span class="string">"go"</span>:<span class="number">816536</span>,<span class="string">"god"</span>:<span class="number">552668</span>,<span class="string">"good"</span>:<span class="number">966602</span>,<span class="string">"gorge"</span>:<span class="number">6177</span>,<span class="string">"got"</span>:<span class="number">432016</span>,<span class="string">"groan"</span>:<span class="number">9995</span>,</div><div class="line">        <span class="string">"grow"</span>:<span class="number">64005</span>,<span class="string">"grown"</span>:<span class="number">57772</span>,<span class="string">"lord"</span>:<span class="number">422407</span>,<span class="string">"more"</span>:<span class="number">1899787</span>,<span class="string">"nor"</span>:<span class="number">349691</span>,<span class="string">"of"</span>:<span class="number">33950064</span>,<span class="string">"off"</span>:<span class="number">545832</span>,<span class="string">"or"</span>:<span class="number">4228287</span>,</div><div class="line">        <span class="string">"work"</span>:<span class="number">829823</span>&#125;</div></pre></td></tr></table></figure>
+<p>Let’s get the functions <code>edits1</code> and <code>edits2</code> from Norvig’s article.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">edits1</span><span class="params">(word)</span>:</span></div><div class="line">    <span class="string">"All edits that are one edit away from `word`."</span></div><div class="line">    alphabet = <span class="string">'abcdefghijklmnopqrstuvwxyz'</span></div><div class="line">    splits     = [(word[:i], word[i:]) <span class="keyword">for</span> i <span class="keyword">in</span> range(len(word) + <span class="number">1</span>)]</div><div class="line">    deletes    = [a + b[<span class="number">1</span>:] <span class="keyword">for</span> a, b <span class="keyword">in</span> splits <span class="keyword">if</span> b]</div><div class="line">    transposes = [a + b[<span class="number">1</span>] + b[<span class="number">0</span>] + b[<span class="number">2</span>:] <span class="keyword">for</span> a, b <span class="keyword">in</span> splits <span class="keyword">if</span> len(b)&gt;<span class="number">1</span>]</div><div class="line">    replaces   = [a + c + b[<span class="number">1</span>:] <span class="keyword">for</span> a, b <span class="keyword">in</span> splits <span class="keyword">for</span> c <span class="keyword">in</span> alphabet <span class="keyword">if</span> b]</div><div class="line">    inserts    = [a + c + b <span class="keyword">for</span> a, b <span class="keyword">in</span> splits <span class="keyword">for</span> c <span class="keyword">in</span> alphabet]</div><div class="line">    <span class="keyword">return</span> set(deletes + transposes + replaces + inserts)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">edits2</span><span class="params">(word)</span>:</span></div><div class="line">    <span class="string">"All edits that are two edits away from `word`."</span></div><div class="line">    <span class="keyword">return</span> set(e2 <span class="keyword">for</span> e1 <span class="keyword">in</span> edits1(word) <span class="keyword">for</span> e2 <span class="keyword">in</span> edits1(e1) <span class="keyword">if</span> e2 <span class="keyword">in</span> table)</div></pre></td></tr></table></figure>
+<p>Write a function that returns the maximum frequency candidate at edit distance 1.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">d1</span><span class="params">(word)</span>:</span></div><div class="line">    arr = &#123;&#125;</div><div class="line">    d1 = edits1(word)</div><div class="line">    result = <span class="string">"None"</span></div><div class="line">    <span class="keyword">for</span> w <span class="keyword">in</span> d1:</div><div class="line">        <span class="keyword">if</span> w <span class="keyword">in</span> table.keys():</div><div class="line">            arr[w] = table[w]</div><div class="line">            result = max(arr, key=arr.get)</div><div class="line">    <span class="keyword">return</span> result</div></pre></td></tr></table></figure>
+<p>If the candidate is not found at edit distance 1, then try edit distance 2.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">d2</span><span class="params">(word)</span>:</span></div><div class="line">    arr = &#123;&#125;</div><div class="line">    d2 = edits2(word)</div><div class="line">    result = <span class="string">"None"</span></div><div class="line">    <span class="keyword">for</span> w <span class="keyword">in</span> d2:</div><div class="line">        <span class="keyword">if</span> w <span class="keyword">in</span> table.keys():</div><div class="line">            arr[w] = table[w]</div><div class="line">            result = max(arr, key=arr.get)</div><div class="line">    <span class="keyword">return</span> result</div></pre></td></tr></table></figure>
+<p>Bring it all together</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">correct</span><span class="params">(table,list)</span>:</span></div><div class="line">    result = &#123;&#125;</div><div class="line">    <span class="keyword">for</span> w <span class="keyword">in</span> list:</div><div class="line">        <span class="keyword">if</span> w <span class="keyword">in</span> table:</div><div class="line">            result[w] = w</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            result[w] = d1(w)</div><div class="line">            <span class="keyword">if</span> result[w] == <span class="string">"None"</span>:</div><div class="line">                result[w] = d2(w)</div><div class="line">    <span class="keyword">return</span> result</div></pre></td></tr></table></figure>
+<h2 id="Results"><a href="#Results" class="headerlink" title="Results"></a>Results</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">words_to_check = [<span class="string">'frog'</span>,<span class="string">'gorf'</span>,<span class="string">'forg'</span>,<span class="string">'grof'</span>]</div><div class="line"></div><div class="line">correct(table,words_to_check)</div></pre></td></tr></table></figure>
+<pre><code>{&apos;forg&apos;: &apos;for&apos;, &apos;frog&apos;: &apos;frog&apos;, &apos;gorf&apos;: &apos;of&apos;, &apos;grof&apos;: &apos;grow&apos;}
+</code></pre>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;In “How to Write a Spelling Corrector” &lt;a href=&quot;http://norvig.com/spell-correct.html&quot;&gt;http://norvig.com/spell-correct.html&lt;/a&gt;, Norvig describes training his algorithm on about a million words taken from several public domain books. Various precompiled word frequency lists are also available on the web, for example for all of the Project Gutenberg texts up to Apr 2006 at &lt;a href=&quot;http://en.wiktionary.org/wiki/Wiktionary:Frequency_lists#Project_Gutenberg&quot;&gt;http://en.wiktionary.org/wiki/Wiktionary:Frequency_lists#Project_Gutenberg&lt;/a&gt; .&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="Machine Learning" scheme="http://.alexsinfarosa.com/tags/Machine-Learning/"/>
+    
+      <category term="Spelling Corrector" scheme="http://.alexsinfarosa.com/tags/Spelling-Corrector/"/>
+    
+      <category term="Peter Norvig" scheme="http://.alexsinfarosa.com/tags/Peter-Norvig/"/>
+    
+      <category term="Python" scheme="http://.alexsinfarosa.com/tags/Python/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Zipf&#39;s Law</title>
+    <link href="http://.alexsinfarosa.com/2016/03/16/Zipf-s-Law/"/>
+    <id>http://.alexsinfarosa.com/2016/03/16/Zipf-s-Law/</id>
+    <published>2016-03-16T11:02:02.000Z</published>
+    <updated>2016-09-27T21:50:41.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>The linguist George Kingsley Zipf, who theorised that given a large body of language (that is, a long book — or every word uttered by Plus employees during the day), the frequency of each word is close to inversely proportional to its rank in the frequency table.</p>
+<p>In this guide we’ll write some code to look at some word distributions and power laws.</p>
+<a id="more"></a>
+<h2 id="The-data"><a href="#The-data" class="headerlink" title="The data"></a>The data</h2><p>The data folder contains 71 files:</p>
+<ul>
+<li>Thirty files labelled p0.txt – p29.txt, with text extracted from ten recent news articles about politics.</li>
+<li>Thirty files labelled s0.txt – s29.txt, with text extracted from ten recent news articles about sports.</li>
+<li>Ten files labelled t0.txt – t9.txt, which will be the “test set”.</li>
+</ul>
+<p>First, let’s import the texts themselves into our notebook.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">ptexts=[open(<span class="string">'data/p&#123;&#125;.txt'</span>.format(i)).read() <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">30</span>)]</div><div class="line">stexts=[open(<span class="string">'data/s&#123;&#125;.txt'</span>.format(i)).read() <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">30</span>)]</div><div class="line">ttexts=[open(<span class="string">'data/t&#123;&#125;.txt'</span>.format(i)).read() <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">10</span>)]</div></pre></td></tr></table></figure>
+<p>The following code iterates through the sixty training texts, and accumulates their word counts in the Counter object <code>thewords</code>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">%pylab inline</div><div class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> Counter</div><div class="line"></div><div class="line">thewords=Counter()</div><div class="line"><span class="keyword">for</span> txt <span class="keyword">in</span> ptexts+stexts:</div><div class="line">    thewords += Counter(txt.lower().split())</div></pre></td></tr></table></figure>
+<p>For instance, we could look at the 10 most common words in the Counter object <code>thewords</code> by using the <code>most_common</code> method as follows:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">thewords.most_common(<span class="number">10</span>)</div></pre></td></tr></table></figure>
+<pre><code>[(&apos;the&apos;, 3692),
+ (&apos;to&apos;, 1688),
+ (&apos;a&apos;, 1665),
+ (&apos;of&apos;, 1578),
+ (&apos;and&apos;, 1478),
+ (&apos;in&apos;, 1223),
+ (&apos;that&apos;, 921),
+ (&apos;is&apos;, 644),
+ (&apos;for&apos;, 625),
+ (&apos;he&apos;, 612)]
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line">words,nw=zip(*thewords.most_common())</div></pre></td></tr></table></figure>
+<p>Total number of words in the corpus:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">corpus = sum(nw)</div><div class="line">print(corpus)</div></pre></td></tr></table></figure>
+<pre><code>63827
+</code></pre><h2 id="Rank-frequency-graph"><a href="#Rank-frequency-graph" class="headerlink" title="Rank frequency graph"></a>Rank frequency graph</h2><p>The frequency of occurrence vs. the rank of the word.</p>
+<p>Now we plot the number of occurrences in the <code>thewords</code> dictionary on the y-axis, ordered so that the word with the largest number of occurrences is plotted first, the word with second largest number of occurrences is plotted second, and so on.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">figure(figsize=(<span class="number">5.5</span>,<span class="number">5</span>))</div><div class="line">r=arange(<span class="number">1</span>,len(nw)+<span class="number">1</span>)</div><div class="line">plot(r,nw,<span class="string">'o'</span>);</div></pre></td></tr></table></figure>
+<p><img src="output_10_0.png" alt="png"></p>
+<p>As we notice from the graph above it is difficult to see the overall structure of this data since most of the values are so small. A standard method is to plot using logarithmic scales, so that a fixed distance along the axis corresponds to say a factor of 10 (rather than just adding 10). This can be implemented by adding xscale(‘log’) or yscale(‘log’), or both, before or after the plot() command; or by using loglog() instead of plot(). They give the same type of plot.</p>
+<p>Now, we extract the counts for the top 500 words in our thewords dictionary, and plot those counts against the word ranks. We also annotate the top ten words on the graph with what they are. Finally we try to fit the data we have plotted with a straight line.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">figure(figsize=(<span class="number">6</span>,<span class="number">6</span>))</div><div class="line">r=<span class="number">1</span>+arange(<span class="number">500</span>)</div><div class="line">loglog(r,nw[:<span class="number">500</span>],<span class="string">'o'</span>)</div><div class="line">plot(r,<span class="number">6500.</span>/r)</div><div class="line"><span class="keyword">for</span> x,y,w <span class="keyword">in</span> list(zip(r,nw,words))[:<span class="number">11</span>]:</div><div class="line"><span class="comment">#    text(x,(1.1 if x%2 else .75)*y,w,ha='center')</span></div><div class="line">    text(x,(<span class="number">1.5</span> <span class="keyword">if</span> x%<span class="number">2</span> <span class="keyword">else</span> <span class="number">.67</span>)*y,w,ha=<span class="string">'center'</span>)</div><div class="line">xlim(<span class="number">.9</span>,<span class="number">1e3</span>)</div><div class="line">ylim(<span class="number">.9</span>,<span class="number">1e4</span>)</div><div class="line">xlabel(<span class="string">'word rank'</span>)</div><div class="line">ylabel(<span class="string">'#occurrences'</span>)</div><div class="line">legend([<span class="string">'data'</span>,<span class="string">'-1 power law "fit"'</span>]);</div></pre></td></tr></table></figure>
+<p><img src="output_13_0.png" alt="png"></p>
+<h2 id="Results"><a href="#Results" class="headerlink" title="Results"></a>Results</h2><p>Many data points do fall roughly along a straight line in log-log space (Zipf’s law), even for this tiny amount of data, which amount only to the sixty short training set articles.</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;The linguist George Kingsley Zipf, who theorised that given a large body of language (that is, a long book — or every word uttered by Plus employees during the day), the frequency of each word is close to inversely proportional to its rank in the frequency table.&lt;/p&gt;
+&lt;p&gt;In this guide we’ll write some code to look at some word distributions and power laws.&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="Machine Learning" scheme="http://.alexsinfarosa.com/tags/Machine-Learning/"/>
+    
+      <category term="Python" scheme="http://.alexsinfarosa.com/tags/Python/"/>
+    
+      <category term="Zipf&#39;s Law" scheme="http://.alexsinfarosa.com/tags/Zipf-s-Law/"/>
+    
+      <category term="Power Law" scheme="http://.alexsinfarosa.com/tags/Power-Law/"/>
+    
+      <category term="Log-Log Plot" scheme="http://.alexsinfarosa.com/tags/Log-Log-Plot/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Naive Bayes Text Classifier</title>
+    <link href="http://.alexsinfarosa.com/2016/02/21/Naive-Bayes-text-classifier/"/>
+    <id>http://.alexsinfarosa.com/2016/02/21/Naive-Bayes-text-classifier/</id>
+    <published>2016-02-21T15:49:18.000Z</published>
+    <updated>2016-09-27T21:45:54.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>The following code will attempt to illustrate how to apply the “Naive Bayes” methodology to construct a simple text classifier.</p>
+<a id="more"></a>
+<p>The data folder contains 71 files:</p>
+<ul>
+<li>thirty files labelled p0.txt – p29.txt, with text extracted from ten recent news articles about politics</li>
+<li>thirty files labelled s0.txt – s29.txt, with text extracted from ten recent news articles about sports</li>
+<li>ten files labelled t0.txt – t9.txt, which will be the “test set”</li>
+</ul>
+<p>The data were pulled down on 10 Feb 2016, so dominated by Iowa and New Hampshire primaries on the politics side, and by the SuperBowl on the sports side.</p>
+<p>We will train a binary classifier (politics/sports) based on the first sixty “training” files (p0.txt – p29.txt and s0.txt – s29.txt), and test it on the ten “test” files (t0.txt – t9.txt).</p>
+<h2 id="Import-the-texts-into-our-notebook"><a href="#Import-the-texts-into-our-notebook" class="headerlink" title="Import the texts into our notebook."></a>Import the texts into our notebook.</h2><p>Their contents can be imported into three python lists as follows:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">ptexts=[open(<span class="string">'data/p&#123;&#125;.txt'</span>.format(i)).read() <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">30</span>)]</div><div class="line">stexts=[open(<span class="string">'data/s&#123;&#125;.txt'</span>.format(i)).read() <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">30</span>)]</div><div class="line">ttexts=[open(<span class="string">'data/t&#123;&#125;.txt'</span>.format(i)).read() <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">10</span>)]</div></pre></td></tr></table></figure>
+<p>So, the file p0.txt is now available to us as ptexts[0], in fact we could try to view its content by typing:  <code>print(ptexts[0])</code></p>
+<p>At this point we need to split the texts into something like words. For this purpose, characters are all made lowercase, then all strings of letters a-z plus apostrophes can be extracted as a list. For example, for the first political text ptexts[0], and using a regular expresion that finds all strings with a-z and ‘:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> re</div><div class="line">re.findall(<span class="string">"[a-z']+"</span>,ptexts[<span class="number">0</span>].lower())</div></pre></td></tr></table></figure>
+<p><code>re.findall(&quot;[a-z&#39;]+&quot;,txt)</code> just finds all contiguous strings made up of the characters a-z or ‘, and returns them as a list.</p>
+<p>This will return a list of all the ‘words’ in that document. For the time being, we only want to count the number of documents in which a word occurs (not the number of occurrences within the document), so we apply set() to the above list so that each word only appears once. Finally, it’s convenient to use the Counter object (<a href="http://docs.python.org/2/library/collections.html" target="_blank" rel="external">http://docs.python.org/2/library/collections.html</a>), which is just a dictionary to accumulate counts for the words. The result is:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> Counter</div><div class="line">Counter(set(re.findall(<span class="string">"[a-z']+"</span>,ptexts[<span class="number">0</span>].lower())))</div></pre></td></tr></table></figure>
+<h2 id="Define-two-counters"><a href="#Define-two-counters" class="headerlink" title="Define two counters"></a>Define two counters</h2><p>In order to accumulate the number counts (number of documents in which word occurs), we’ll define two counters, n_p for the number counts of words in the politics training set, and n_s for the number counts in the sports training set, by iterating through the associated training sets:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line">n_p = np.sum([Counter(set(re.findall(<span class="string">"[a-z']+"</span>,txt.lower()))) <span class="keyword">for</span> txt <span class="keyword">in</span> ptexts])</div><div class="line">n_s = np.sum([Counter(set(re.findall(<span class="string">"[a-z']+"</span>,txt.lower()))) <span class="keyword">for</span> txt <span class="keyword">in</span> stexts])</div></pre></td></tr></table></figure>
+<font size="-1">[Note: the above requires having numpy functions loaded in the primary namespace, e.g., using <code>%pylab inline</code> (executes <code>from numpy import *</code>, populating the namespace with numpy functions). We could also use instead, as shown above, <code>import numpy as np</code>, but then we need <code>np.sum()</code> in the above since the standard <code>sum()</code> does not support adding <code>Counter()</code> objects. Something to remember is that each <code>Counter()</code> is a dictionary whose keys are words, and associated values are their number counts, so the <code>sum()</code> has to be smart enough to know that adding <code>Counter()</code>s means taking the set union of their keys and adding the count values of any coincident ones. The generic python <code>sum()</code> does not do this (instead generates a “TypeError: unsupported operand type(s) for +”), but the numpy <code>sum()</code> does work properly for this.]</font>
+
+<p>The Counter object has a convenient ‘most_common’ method, so we can look at the numbers for the most frequent words (where 30 means they occurred in all thirty training documents):</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">n_p.most_common(<span class="number">10</span>),n_s.most_common(<span class="number">10</span>)</div></pre></td></tr></table></figure>
+<h2 id="Write-the-classifier"><a href="#Write-the-classifier" class="headerlink" title="Write the classifier"></a>Write the classifier</h2><p>The only thing left at this point is to write the classifier code to implement the Naive Bayes classifier. The formula is the following:</p>
+<p>$$<br>p({\rm politics}\ |\ words) = \frac{p(words\ |\ {\rm politics})\,p({\rm politics})}<br>{p(words\ |\ {\rm politics})\,p({\rm politics})+p(words\ |\ {\rm sports})\,p({\rm sports})}<br>\approx\frac{\prod_i p(w_i\ |\ {\rm politics})}{\prod_i p(w_i\ |\ {\rm politics})+\prod_i p(w_i\ |\ {\rm sports})}<br>$$</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">p_train=<span class="number">30.</span></div><div class="line">s_train=<span class="number">30.</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">bayes_classifier</span><span class="params">(txt)</span>:</span></div><div class="line">    p=<span class="number">1.</span></div><div class="line">    s=<span class="number">1.</span></div><div class="line">    word_counts=Counter(re.findall(<span class="string">"[a-z']+"</span>,txt.lower()))</div><div class="line">    <span class="comment"># We need to account for stopwords</span></div><div class="line">    keywords=[w <span class="keyword">for</span> w,c <span class="keyword">in</span> word_counts.most_common() <span class="keyword">if</span> n_p[w]&lt; <span class="number">26</span> <span class="keyword">and</span> n_s[w]&lt;<span class="number">26</span>][:<span class="number">30</span>]</div><div class="line">    print(<span class="string">'\tbased on "&#123;&#125; ...":'</span>.format(<span class="string">', '</span>.join(keywords[:<span class="number">9</span>])))</div><div class="line">    <span class="keyword">for</span> word <span class="keyword">in</span> keywords:</div><div class="line">        <span class="comment"># handling words in the test documents that haven't been seen before (".1 smoothing")</span></div><div class="line">        <span class="keyword">if</span> word <span class="keyword">not</span> <span class="keyword">in</span> n_p: n_p[word]=<span class="number">.1</span></div><div class="line">        <span class="keyword">if</span> word <span class="keyword">not</span> <span class="keyword">in</span> n_s: n_s[word]=<span class="number">.1</span></div><div class="line">        p *= n_p[word]/p_train</div><div class="line">        s *= n_s[word]/s_train</div><div class="line">    prob=p/(p+s)</div><div class="line">    <span class="keyword">if</span> prob &gt;= <span class="number">.5</span>:</div><div class="line">        <span class="keyword">return</span> <span class="string">'POLITICS'</span>,prob</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        <span class="keyword">return</span> <span class="string">'SPORT'</span>,<span class="number">1</span>-prob</div></pre></td></tr></table></figure>
+<h2 id="Results"><a href="#Results" class="headerlink" title="Results"></a>Results</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">10</span>):</div><div class="line">    print(<span class="string">'t&#123;&#125;.txt:'</span>.format(i),bayes_classifier(ttexts[i]))</div></pre></td></tr></table></figure>
+<pre><code>    based on &quot;rubio, him, rubio&apos;s, he&apos;s, there&apos;s, party, question, suggest, braman ...&quot;:
+t0.txt: (&apos;POLITICS&apos;, 0.9999999999843888)
+    based on &quot;i, warriors, ever, spurs, about, i&apos;d, greatest, were, been ...&quot;:
+t1.txt: (&apos;SPORT&apos;, 1.0)
+    based on &quot;saban, alabama, football, coach, college, team, national, state, season ...&quot;:
+t2.txt: (&apos;SPORT&apos;, 1.0)
+    based on &quot;trump, iowa, will, cruz, gop, republican, trump&apos;s, rubio, there ...&quot;:
+t3.txt: (&apos;POLITICS&apos;, 1.0)
+    based on &quot;sanders, democratic, left, party, win, will, s, people, i ...&quot;:
+t4.txt: (&apos;POLITICS&apos;, 1.0)
+    based on &quot;georgia, world, russia, georgia&apos;s, rugby, team, cup, war, sharikadze ...&quot;:
+t5.txt: (&apos;SPORT&apos;, 0.9999998083467077)
+    based on &quot;bush, campaign, hampshire, about, jeb, trump, him, he&apos;s, its ...&quot;:
+t6.txt: (&apos;POLITICS&apos;, 0.9999999999999415)
+    based on &quot;curry, play, season, after, been, steph, five, team, warriors ...&quot;:
+t7.txt: (&apos;SPORT&apos;, 0.9999999999999866)
+    based on &quot;scholarships, college, athletes, players, year, scholarship, her, could, athletic ...&quot;:
+t8.txt: (&apos;SPORT&apos;, 0.999999999704003)
+    based on &quot;golf, woods, tiger, no, championship, best, two, player, age ...&quot;:
+t9.txt: (&apos;SPORT&apos;, 1.0)
+</code></pre>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;The following code will attempt to illustrate how to apply the “Naive Bayes” methodology to construct a simple text classifier.&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="Naive Bayes" scheme="http://.alexsinfarosa.com/tags/Naive-Bayes/"/>
+    
+      <category term="Text Classifier" scheme="http://.alexsinfarosa.com/tags/Text-Classifier/"/>
+    
+      <category term="Python" scheme="http://.alexsinfarosa.com/tags/Python/"/>
+    
+  </entry>
+  
+</feed>

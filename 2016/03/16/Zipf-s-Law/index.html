@@ -1,0 +1,64 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="author" content="Alex Sinfarosa"><meta name="description" content="ThelinguistGeorgeKingsleyZipf,whotheorisedthatgivenalargebodyoflanguage(thatis,alongbook—oreverywordutteredbyPluse"><meta name="keywords" content="Machine Learning,Python,Zipf's Law,Power Law,Log-Log Plot"><title>Zipf's Law · alexsinfarosa.com</title><link rel="icon" href="/"><link rel="canonical" href="http://.alexsinfarosa.com/2016/03/16/Zipf-s-Law/"><link rel="alternate" href="/atom.xml" title="alexsinfarosa.com"><link rel="stylesheet" href="/fonts/iconfont/iconfont.css"><link rel="stylesheet" href="/css/style.css"><script type="text/javascript">var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?Your baidu Analytics ID";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script type="text/javascript">(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-84813198-1', 'auto');
+ga('send', 'pageview');</script></head><body><div id="main"><header><a href="/." class="logo">alexsinfarosa.com</a><ul class="nav"><li class="nav-link"><a href="/" target="_self">Home</a></li><li class="nav-link"><a href="/archives/" target="_self">Archives</a></li><li class="nav-link"><a href="/tags/" target="_self">Tags</a></li><li class="nav-link"><a href="/about/" target="_self">About</a></li></ul></header><section id="container"><article class="post"><h1 class="post-title">Zipf's Law</h1><span class="post-time">Mar 16, 2016</span><div id="sidebar" class="post-sidebar"><h3 class="heading">Contents</h3><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#The-data"><span class="toc-text">The data</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Rank-frequency-graph"><span class="toc-text">Rank frequency graph</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Results"><span class="toc-text">Results</span></a></li></ol></div><div class="post-content"><p>The linguist George Kingsley Zipf, who theorised that given a large body of language (that is, a long book — or every word uttered by Plus employees during the day), the frequency of each word is close to inversely proportional to its rank in the frequency table.</p>
+<p>In this guide we’ll write some code to look at some word distributions and power laws.</p>
+<a id="more"></a>
+<h2 id="The-data"><a href="#The-data" class="headerlink" title="The data"></a>The data</h2><p>The data folder contains 71 files:</p>
+<ul>
+<li>Thirty files labelled p0.txt – p29.txt, with text extracted from ten recent news articles about politics.</li>
+<li>Thirty files labelled s0.txt – s29.txt, with text extracted from ten recent news articles about sports.</li>
+<li>Ten files labelled t0.txt – t9.txt, which will be the “test set”.</li>
+</ul>
+<p>First, let’s import the texts themselves into our notebook.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">ptexts=[open(<span class="string">'data/p&#123;&#125;.txt'</span>.format(i)).read() <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">30</span>)]</div><div class="line">stexts=[open(<span class="string">'data/s&#123;&#125;.txt'</span>.format(i)).read() <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">30</span>)]</div><div class="line">ttexts=[open(<span class="string">'data/t&#123;&#125;.txt'</span>.format(i)).read() <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">10</span>)]</div></pre></td></tr></table></figure>
+<p>The following code iterates through the sixty training texts, and accumulates their word counts in the Counter object <code>thewords</code>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">%pylab inline</div><div class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> Counter</div><div class="line"></div><div class="line">thewords=Counter()</div><div class="line"><span class="keyword">for</span> txt <span class="keyword">in</span> ptexts+stexts:</div><div class="line">    thewords += Counter(txt.lower().split())</div></pre></td></tr></table></figure>
+<p>For instance, we could look at the 10 most common words in the Counter object <code>thewords</code> by using the <code>most_common</code> method as follows:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">thewords.most_common(<span class="number">10</span>)</div></pre></td></tr></table></figure>
+<pre><code>[(&apos;the&apos;, 3692),
+ (&apos;to&apos;, 1688),
+ (&apos;a&apos;, 1665),
+ (&apos;of&apos;, 1578),
+ (&apos;and&apos;, 1478),
+ (&apos;in&apos;, 1223),
+ (&apos;that&apos;, 921),
+ (&apos;is&apos;, 644),
+ (&apos;for&apos;, 625),
+ (&apos;he&apos;, 612)]
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line">words,nw=zip(*thewords.most_common())</div></pre></td></tr></table></figure>
+<p>Total number of words in the corpus:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">corpus = sum(nw)</div><div class="line">print(corpus)</div></pre></td></tr></table></figure>
+<pre><code>63827
+</code></pre><h2 id="Rank-frequency-graph"><a href="#Rank-frequency-graph" class="headerlink" title="Rank frequency graph"></a>Rank frequency graph</h2><p>The frequency of occurrence vs. the rank of the word.</p>
+<p>Now we plot the number of occurrences in the <code>thewords</code> dictionary on the y-axis, ordered so that the word with the largest number of occurrences is plotted first, the word with second largest number of occurrences is plotted second, and so on.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">figure(figsize=(<span class="number">5.5</span>,<span class="number">5</span>))</div><div class="line">r=arange(<span class="number">1</span>,len(nw)+<span class="number">1</span>)</div><div class="line">plot(r,nw,<span class="string">'o'</span>);</div></pre></td></tr></table></figure>
+<p><img src="output_10_0.png" alt="png"></p>
+<p>As we notice from the graph above it is difficult to see the overall structure of this data since most of the values are so small. A standard method is to plot using logarithmic scales, so that a fixed distance along the axis corresponds to say a factor of 10 (rather than just adding 10). This can be implemented by adding xscale(‘log’) or yscale(‘log’), or both, before or after the plot() command; or by using loglog() instead of plot(). They give the same type of plot.</p>
+<p>Now, we extract the counts for the top 500 words in our thewords dictionary, and plot those counts against the word ranks. We also annotate the top ten words on the graph with what they are. Finally we try to fit the data we have plotted with a straight line.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">figure(figsize=(<span class="number">6</span>,<span class="number">6</span>))</div><div class="line">r=<span class="number">1</span>+arange(<span class="number">500</span>)</div><div class="line">loglog(r,nw[:<span class="number">500</span>],<span class="string">'o'</span>)</div><div class="line">plot(r,<span class="number">6500.</span>/r)</div><div class="line"><span class="keyword">for</span> x,y,w <span class="keyword">in</span> list(zip(r,nw,words))[:<span class="number">11</span>]:</div><div class="line"><span class="comment">#    text(x,(1.1 if x%2 else .75)*y,w,ha='center')</span></div><div class="line">    text(x,(<span class="number">1.5</span> <span class="keyword">if</span> x%<span class="number">2</span> <span class="keyword">else</span> <span class="number">.67</span>)*y,w,ha=<span class="string">'center'</span>)</div><div class="line">xlim(<span class="number">.9</span>,<span class="number">1e3</span>)</div><div class="line">ylim(<span class="number">.9</span>,<span class="number">1e4</span>)</div><div class="line">xlabel(<span class="string">'word rank'</span>)</div><div class="line">ylabel(<span class="string">'#occurrences'</span>)</div><div class="line">legend([<span class="string">'data'</span>,<span class="string">'-1 power law "fit"'</span>]);</div></pre></td></tr></table></figure>
+<p><img src="output_13_0.png" alt="png"></p>
+<h2 id="Results"><a href="#Results" class="headerlink" title="Results"></a>Results</h2><p>Many data points do fall roughly along a straight line in log-log space (Zipf’s law), even for this tiny amount of data, which amount only to the sixty short training set articles.</p>
+</div></article><div class="tags"><a href="/tags/Machine-Learning/">Machine Learning</a><a href="/tags/Python/">Python</a><a href="/tags/Zipf-s-Law/">Zipf's Law</a><a href="/tags/Power-Law/">Power Law</a><a href="/tags/Log-Log-Plot/">Log-Log Plot</a></div><div class="paginator"><a href="/2016/04/23/Simple-Spelling-Corrector/" class="prev"><i class="iconfont icon-left"></i><span> Prev</span></a><a href="/2016/02/21/Naive-Bayes-text-classifier/" class="next"><span>Next</span><i class="iconfont icon-right"></i></a></div><section id="comments"><div id="disqus_thread"></div></section><script type="text/javascript">var disqus_config = function () {
+    this.page.url = 'http://.alexsinfarosa.com/2016/03/16/Zipf-s-Law/';
+    this.page.identifier = '2016/03/16/Zipf-s-Law/';
+    this.page.title = 'Zipf's Law';
+};
+(function() {
+var d = document, s = d.createElement('script');
+
+s.src = '//alexsinfarosa-com.disqus.com/embed.js';
+
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();</script></section><footer><div class="copyright"><p class="since">&copy;2016<span class="heart"><i class="iconfont icon-heart"></i></span><span class="author">Alex Sinfarosa</span></p></div><label id="back2top"><i class="iconfont icon-up"></i></label></footer></div><script src="/js/zepto.min.js"></script><script src="/js/theme.js"></script></body></html>
