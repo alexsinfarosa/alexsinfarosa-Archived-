@@ -56,11 +56,11 @@
     
       <category term="Machine Learning" scheme="http://.alexsinfarosa.com/tags/Machine-Learning/"/>
     
+      <category term="Python" scheme="http://.alexsinfarosa.com/tags/Python/"/>
+    
       <category term="Logistic Regression" scheme="http://.alexsinfarosa.com/tags/Logistic-Regression/"/>
     
       <category term="Dimensionality Reduction" scheme="http://.alexsinfarosa.com/tags/Dimensionality-Reduction/"/>
-    
-      <category term="Python" scheme="http://.alexsinfarosa.com/tags/Python/"/>
     
   </entry>
   
@@ -100,11 +100,11 @@
     
       <category term="Machine Learning" scheme="http://.alexsinfarosa.com/tags/Machine-Learning/"/>
     
+      <category term="Python" scheme="http://.alexsinfarosa.com/tags/Python/"/>
+    
       <category term="Spelling Corrector" scheme="http://.alexsinfarosa.com/tags/Spelling-Corrector/"/>
     
       <category term="Peter Norvig" scheme="http://.alexsinfarosa.com/tags/Peter-Norvig/"/>
-    
-      <category term="Python" scheme="http://.alexsinfarosa.com/tags/Python/"/>
     
   </entry>
   
@@ -239,11 +239,11 @@ t9.txt: (&apos;SPORT&apos;, 1.0)
     </summary>
     
     
+      <category term="Python" scheme="http://.alexsinfarosa.com/tags/Python/"/>
+    
       <category term="Naive Bayes" scheme="http://.alexsinfarosa.com/tags/Naive-Bayes/"/>
     
       <category term="Text Classifier" scheme="http://.alexsinfarosa.com/tags/Text-Classifier/"/>
-    
-      <category term="Python" scheme="http://.alexsinfarosa.com/tags/Python/"/>
     
   </entry>
   
