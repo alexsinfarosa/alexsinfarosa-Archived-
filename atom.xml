@@ -69,10 +69,10 @@
     <link href="http://.alexsinfarosa.com/2016/05/08/Spearman-and-Pearson-Correlation/"/>
     <id>http://.alexsinfarosa.com/2016/05/08/Spearman-and-Pearson-Correlation/</id>
     <published>2016-05-08T14:53:06.000Z</published>
-    <updated>2016-09-30T14:59:50.000Z</updated>
+    <updated>2016-09-30T15:11:02.000Z</updated>
     
-    <content type="html"><![CDATA[<p>In the following notebook will determine whether three sets of numbers are correlated.</p>
-<p>We will use one more time the thirty politics articles (those labelled p0.txt through p29.txt) contained in the data folder.</p>
+    <content type="html"><![CDATA[<p>In the following notebook we will determine whether three sets of numbers are correlated.</p>
+<p>We will use one more time the thirty politics articles (those labelled p0.txt through p29.txt) contained in the<br><a href="https://github.com/alexsinfarosa/Baby-Machine-Learning/tree/master/data" target="_blank" rel="external">data</a> folder.</p>
 <p>Each of the article webpages has three icons labelling counts for a) facebook likes, b) tweets, and c) comments.</p>
 <a id="more"></a>
 <h3 id="The-data"><a href="#The-data" class="headerlink" title="The data"></a>The data</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">fblikes = [<span class="number">101</span>, <span class="number">54</span>, <span class="number">171</span>, <span class="number">5900</span>, <span class="number">2400</span>, <span class="number">385</span>, <span class="number">14400</span>, <span class="number">356</span>, <span class="number">553</span>, <span class="number">146</span>, <span class="number">14400</span>, <span class="number">359</span>, <span class="number">134</span>, <span class="number">40</span>, <span class="number">3400</span>,</div><div class="line">           <span class="number">933</span>, <span class="number">16800</span>, <span class="number">4400</span>, <span class="number">303</span>, <span class="number">7000</span>, <span class="number">1100</span>, <span class="number">427</span>, <span class="number">214</span>, <span class="number">94</span>, <span class="number">1300</span>, <span class="number">1800</span>, <span class="number">882</span>, <span class="number">90</span>, <span class="number">2800</span>, <span class="number">2400</span>]</div><div class="line">tweets = [<span class="number">48</span>, <span class="number">29</span>, <span class="number">67</span>, <span class="number">950</span>, <span class="number">201</span>, <span class="number">103</span>, <span class="number">757</span>, <span class="number">108</span>, <span class="number">130</span>, <span class="number">41</span>, <span class="number">901</span>, <span class="number">80</span>, <span class="number">63</span>, <span class="number">43</span>, <span class="number">205</span>,</div><div class="line">          <span class="number">95</span>, <span class="number">432</span>, <span class="number">260</span>, <span class="number">127</span>, <span class="number">326</span>, <span class="number">75</span>, <span class="number">108</span>, <span class="number">60</span>, <span class="number">52</span>, <span class="number">147</span>, <span class="number">228</span>, <span class="number">75</span>, <span class="number">51</span>, <span class="number">291</span>, <span class="number">761</span>]</div><div class="line">comments = [<span class="number">274</span>, <span class="number">290</span>, <span class="number">98</span>, <span class="number">546</span>, <span class="number">111</span>, <span class="number">185</span>, <span class="number">1900</span>, <span class="number">108</span>, <span class="number">563</span>, <span class="number">158</span>, <span class="number">934</span>, <span class="number">1100</span>, <span class="number">885</span>, <span class="number">122</span>, <span class="number">166</span>,</div><div class="line">           <span class="number">332</span>, <span class="number">1700</span>, <span class="number">1800</span>, <span class="number">213</span>, <span class="number">2300</span>, <span class="number">3000</span>, <span class="number">11</span>, <span class="number">63</span>, <span class="number">107</span>, <span class="number">142</span>, <span class="number">466</span>, <span class="number">327</span>, <span class="number">49</span>, <span class="number">2000</span>, <span class="number">194</span>]</div></pre></td></tr></table></figure>
@@ -159,8 +159,8 @@ co (&apos;president&apos;, 0.39389143259482368, 0.031264888900746315)
     
     <summary type="html">
     
-      &lt;p&gt;In the following notebook will determine whether three sets of numbers are correlated.&lt;/p&gt;
-&lt;p&gt;We will use one more time the thirty politics articles (those labelled p0.txt through p29.txt) contained in the data folder.&lt;/p&gt;
+      &lt;p&gt;In the following notebook we will determine whether three sets of numbers are correlated.&lt;/p&gt;
+&lt;p&gt;We will use one more time the thirty politics articles (those labelled p0.txt through p29.txt) contained in the&lt;br&gt;&lt;a href=&quot;https://github.com/alexsinfarosa/Baby-Machine-Learning/tree/master/data&quot;&gt;data&lt;/a&gt; folder.&lt;/p&gt;
 &lt;p&gt;Each of the article webpages has three icons labelling counts for a) facebook likes, b) tweets, and c) comments.&lt;/p&gt;
     
     </summary>
@@ -280,12 +280,12 @@ co (&apos;president&apos;, 0.39389143259482368, 0.031264888900746315)
     <link href="http://.alexsinfarosa.com/2016/03/16/Zipf-s-Law/"/>
     <id>http://.alexsinfarosa.com/2016/03/16/Zipf-s-Law/</id>
     <published>2016-03-16T11:02:02.000Z</published>
-    <updated>2016-09-27T21:50:41.000Z</updated>
+    <updated>2016-09-30T15:11:36.000Z</updated>
     
     <content type="html"><![CDATA[<p>The linguist George Kingsley Zipf, who theorised that given a large body of language (that is, a long book — or every word uttered by Plus employees during the day), the frequency of each word is close to inversely proportional to its rank in the frequency table.</p>
 <p>In this guide we’ll write some code to look at some word distributions and power laws.</p>
 <a id="more"></a>
-<h2 id="The-data"><a href="#The-data" class="headerlink" title="The data"></a>The data</h2><p>The data folder contains 71 files:</p>
+<h2 id="The-data"><a href="#The-data" class="headerlink" title="The data"></a>The data</h2><p>The <a href="https://github.com/alexsinfarosa/Baby-Machine-Learning/tree/master/data" target="_blank" rel="external">data</a> folder contains 71 files:</p>
 <ul>
 <li>Thirty files labelled p0.txt – p29.txt, with text extracted from ten recent news articles about politics.</li>
 <li>Thirty files labelled s0.txt – s29.txt, with text extracted from ten recent news articles about sports.</li>
@@ -347,11 +347,11 @@ co (&apos;president&apos;, 0.39389143259482368, 0.031264888900746315)
     <link href="http://.alexsinfarosa.com/2016/02/21/Naive-Bayes-text-classifier/"/>
     <id>http://.alexsinfarosa.com/2016/02/21/Naive-Bayes-text-classifier/</id>
     <published>2016-02-21T15:49:18.000Z</published>
-    <updated>2016-09-30T15:00:10.000Z</updated>
+    <updated>2016-09-30T15:11:55.000Z</updated>
     
     <content type="html"><![CDATA[<p>The following code will attempt to illustrate how to apply the “Naive Bayes” methodology to construct a simple text classifier.</p>
 <a id="more"></a>
-<p>The data folder contains 71 files:</p>
+<p>The <a href="https://github.com/alexsinfarosa/Baby-Machine-Learning/tree/master/data" target="_blank" rel="external">data</a> folder contains 71 files:</p>
 <ul>
 <li>thirty files labelled p0.txt – p29.txt, with text extracted from ten recent news articles about politics</li>
 <li>thirty files labelled s0.txt – s29.txt, with text extracted from ten recent news articles about sports</li>
