@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://.alexsinfarosa.com/2016/05/08/Spearman-and-Pearson-Correlation/</loc>
+    
+    <lastmod>2016-09-30T15:38:49.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://.alexsinfarosa.com/2016/02/21/Naive-Bayes-text-classifier/</loc>
     
     <lastmod>2016-09-30T15:11:55.000Z</lastmod>
@@ -12,13 +19,6 @@
     <loc>http://.alexsinfarosa.com/2016/03/16/Zipf-s-Law/</loc>
     
     <lastmod>2016-09-30T15:11:36.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://.alexsinfarosa.com/2016/05/08/Spearman-and-Pearson-Correlation/</loc>
-    
-    <lastmod>2016-09-30T15:11:02.000Z</lastmod>
     
   </url>
   

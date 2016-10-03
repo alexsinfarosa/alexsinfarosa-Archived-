@@ -25,8 +25,8 @@ fb/co Pearson  r=0.50, p=0.004842
       Spearman r=0.58, p=0.000735
 tw/co Pearson  r=0.27, p=0.142944
       Spearman r=0.47, p=0.008601
-</code></pre><p>The results above show that they are all positively correlated (with the Spearman correlation between facebook likes and tweets particularly strong with r=.93). Only the Pearson tweet/comment correlation is not statistically significant at the p=.05 level.</p>
-<p>We also notice from the results that the pair tw/co has a statistically significant Spearman, but not Pearson, correlation. Let’s try to graph it to get some intuition.</p>
+</code></pre><p>The results above show that they are all positively correlated (with the Spearman correlation between facebook likes and tweets particularly strong with <code>r=.93</code>). Only the Pearson <code>tw/co</code> correlation is not statistically significant at the <code>p=.05</code> level.</p>
+<p>We also notice from the results that the pair <code>tw/co</code> has a statistically significant Spearman, but not Pearson, correlation. Let’s try to graph it to get some intuition.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">plt.plot(comments,tweets,<span class="string">'ro'</span>,alpha=<span class="number">.3</span>)</div><div class="line">plt.xlabel(<span class="string">'tweets'</span>)</div><div class="line">plt.ylabel(<span class="string">'comments'</span>)</div><div class="line">plt.grid(<span class="string">'on'</span>);</div></pre></td></tr></table></figure>
 <p><img src="output_9_0.png" alt="png"></p>
 <p>Pearson was not able to see the linear regression because the data is spread out.</p>
