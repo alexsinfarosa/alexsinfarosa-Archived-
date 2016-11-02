@@ -426,9 +426,8 @@ header {
   padding: 20px 100px; }
   header .logo {
     float: left;
-    font-size: 20px;
-    font-family: "Chancery", cursive, LiSu, sans-serif;
-    background-color: light-grey; }
+    font-size: 34px;
+    font-family: "Chancery", cursive, LiSu, sans-serif; }
   header .nav {
     float: right;
     margin-top: 0;
