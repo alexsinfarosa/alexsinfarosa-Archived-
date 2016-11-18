@@ -2,9 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://.alexsinfarosa.com/2016/06/16/Logistic-Regression-Modeling-of-Real-Estate-Properties/</loc>
+    
+    <lastmod>2016-11-18T19:49:54.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://.alexsinfarosa.com/2016/05/08/Spearman-and-Pearson-Correlation/</loc>
     
-    <lastmod>2016-09-30T15:38:49.000Z</lastmod>
+    <lastmod>2016-11-18T19:16:36.000Z</lastmod>
     
   </url>
   
@@ -40,13 +47,6 @@
     <loc>http://.alexsinfarosa.com/2016/04/23/Simple-Spelling-Corrector/</loc>
     
     <lastmod>2016-09-27T21:48:03.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://.alexsinfarosa.com/2016/06/16/Logistic-Regression-Modeling-of-Real-Estate-Properties/</loc>
-    
-    <lastmod>2016-09-27T21:45:45.000Z</lastmod>
     
   </url>
   
