@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://.alexsinfarosa.com/2016/03/30/Random-Graphs/</loc>
+    
+    <lastmod>2016-11-29T20:46:44.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://.alexsinfarosa.com/2016/03/16/Logistic-Regression-Modeling-of-Real-Estate-Properties/</loc>
+    
+    <lastmod>2016-11-29T20:42:59.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://.alexsinfarosa.com/2016/04/29/Recommendation-System/</loc>
     
     <lastmod>2016-11-29T20:36:01.000Z</lastmod>
@@ -12,13 +26,6 @@
     <loc>http://.alexsinfarosa.com/2016/02/21/Naive-Bayes-text-classifier/</loc>
     
     <lastmod>2016-11-29T20:34:21.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://.alexsinfarosa.com/2016/06/16/Logistic-Regression-Modeling-of-Real-Estate-Properties/</loc>
-    
-    <lastmod>2016-11-18T19:49:54.000Z</lastmod>
     
   </url>
   
