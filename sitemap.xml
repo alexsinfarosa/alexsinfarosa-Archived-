@@ -2,16 +2,30 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://.alexsinfarosa.com/2016/03/30/Random-Graphs/</loc>
+    <loc>http://.alexsinfarosa.com/2016/04/13/Simple-Spelling-Corrector/</loc>
     
-    <lastmod>2016-11-29T20:46:44.000Z</lastmod>
+    <lastmod>2016-11-29T21:05:39.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://.alexsinfarosa.com/2016/03/16/Logistic-Regression-Modeling-of-Real-Estate-Properties/</loc>
+    <loc>http://.alexsinfarosa.com/2016/05/14/Spearman-and-Pearson-Correlation/</loc>
     
-    <lastmod>2016-11-29T20:42:59.000Z</lastmod>
+    <lastmod>2016-11-29T21:05:23.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://.alexsinfarosa.com/2016/06/16/Logistic-Regression-Modeling-of-Real-Estate-Properties/</loc>
+    
+    <lastmod>2016-11-29T21:04:58.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://.alexsinfarosa.com/2016/03/30/Random-Graphs/</loc>
+    
+    <lastmod>2016-11-29T20:46:44.000Z</lastmod>
     
   </url>
   
@@ -26,13 +40,6 @@
     <loc>http://.alexsinfarosa.com/2016/02/21/Naive-Bayes-text-classifier/</loc>
     
     <lastmod>2016-11-29T20:34:21.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://.alexsinfarosa.com/2016/05/08/Spearman-and-Pearson-Correlation/</loc>
-    
-    <lastmod>2016-11-18T19:16:36.000Z</lastmod>
     
   </url>
   
@@ -54,13 +61,6 @@
     <loc>http://.alexsinfarosa.com/about/index.html</loc>
     
     <lastmod>2016-09-28T13:51:24.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://.alexsinfarosa.com/2016/04/23/Simple-Spelling-Corrector/</loc>
-    
-    <lastmod>2016-09-27T21:48:03.000Z</lastmod>
     
   </url>
   
